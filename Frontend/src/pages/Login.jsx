@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login, signup } from "../services/authService";
+import { login, loginWithGoogle, signup } from "../services/authService";
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -22,11 +22,23 @@ export default function Login() {
         try {
             setError("");
             await signup(email, password);
-            navigate("/dashboard");
+            navigate("/dash");
         } catch (err) {
             setError(err.message);
         }
     };
+
+    const handleGoogleLogin = async () => {
+
+        try {
+            setError("");
+            await loginWithGoogle();
+            navigate("/dash");
+        } catch (error) {
+            setError(error.message);
+
+        }
+    }
 
     return (
         <div>
@@ -46,6 +58,12 @@ export default function Login() {
             {error && <p style={{ color: "red" }}>{error}</p>}
             <button onClick={handleLogin}>Login</button>
             <button onClick={handleSignup}>SignUp</button>
+
+            <hr style={{ margin: "20px 0" }} />
+
+            <button onClick={handleGoogleLogin}>
+                Sign in with Google
+            </button>
         </div>
     );
 }

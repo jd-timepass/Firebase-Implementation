@@ -1,8 +1,9 @@
 import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
+    signInWithPopup
 } from "firebase/auth";
-import { auth, signOut } from "../config/firebase";
+import { auth, googleProvider, signOut } from "../config/firebase";
 
 export const signup = async (email, password) => {
     const res = await createUserWithEmailAndPassword(auth, email, password);
@@ -13,6 +14,14 @@ export const signup = async (email, password) => {
 
 export const login = async (email, password) => {
     const res = await signInWithEmailAndPassword(auth, email, password);
+    const token = await res.user.getIdToken();
+    localStorage.setItem("token", token);
+    return res;
+};
+
+//Login with google
+export const loginWithGoogle = async () => {
+    const res = await signInWithPopup(auth, googleProvider);
     const token = await res.user.getIdToken();
     localStorage.setItem("token", token);
     return res;
